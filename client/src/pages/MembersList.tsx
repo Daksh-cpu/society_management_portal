@@ -14,9 +14,6 @@ import {
   ChevronRight,
   Filter,
   User,
-  MoreVertical,
-  Check,
-  XCircle,
   AlertTriangle,
 } from 'lucide-react';
 

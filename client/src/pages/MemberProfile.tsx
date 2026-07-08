@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext.js';
 import api from '../services/api.js';
-import { ArrowLeft, Edit2, User, Phone, Mail, Shield, Building, Calendar, Info } from 'lucide-react';
+import { ArrowLeft, Edit2, Phone, Mail, Building, Calendar } from 'lucide-react';
 
 const MemberProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();

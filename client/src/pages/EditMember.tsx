@@ -6,16 +6,16 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '../context/ToastContext.js';
 import api from '../services/api.js';
-import { ArrowLeft, User, Save, AlertCircle } from 'lucide-react';
+import { ArrowLeft, User, Save } from 'lucide-react';
 
 const editMemberFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(50, 'Too long'),
   lastName: z.string().min(1, 'Last name is required').max(50, 'Too long'),
-  phone: z.string().optional().nullable().transform((val) => (val === '' ? null : val)),
+  phone: z.string().optional().nullable(),
   roleId: z.string().min(1, 'Please select a role'),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']).default('ACTIVE'),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']),
   bio: z.string().max(300, 'Bio must be under 300 characters').optional().nullable(),
-  profileImage: z.string().optional().nullable().transform((val) => (val === '' ? null : val)),
+  profileImage: z.string().optional().nullable(),
 });
 
 type EditMemberFormInputs = z.infer<typeof editMemberFormSchema>;
@@ -94,7 +94,12 @@ const EditMember: React.FC = () => {
 
   const onSubmit = (data: EditMemberFormInputs) => {
     setIsSubmittingState(true);
-    updateMutation.mutate(data);
+    const submissionData = {
+      ...data,
+      phone: data.phone === '' ? null : data.phone,
+      profileImage: data.profileImage === '' ? null : data.profileImage,
+    };
+    updateMutation.mutate(submissionData);
   };
 
   if (isLoadingMember) {
@@ -299,9 +304,9 @@ const EditMember: React.FC = () => {
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-850">
             <Link
-              to="/members"
-              disabled={isSubmittingState}
-              className="px-5 py-2.5 border border-slate-800 hover:bg-slate-900 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-250 transition-all disabled:opacity-50"
+              to={isSubmittingState ? '#' : '/members'}
+              onClick={(e) => isSubmittingState && e.preventDefault()}
+              className={`px-5 py-2.5 border border-slate-800 hover:bg-slate-900 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-250 transition-all ${isSubmittingState ? 'opacity-50 pointer-events-none' : ''}`}
             >
               Cancel
             </Link>
